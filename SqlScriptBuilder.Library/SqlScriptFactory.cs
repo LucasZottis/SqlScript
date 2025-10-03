@@ -1,5 +1,5 @@
-﻿using SqlScriptBuilder.Library.Enums;
-using SqlScriptBuilder.Library.Interfaces;
+﻿using SqlScriptBuilder.Library.Read;
+using SqlScriptBuilder.Library.Read.Interfaces;
 
 namespace SqlScriptBuilder.Library
 {

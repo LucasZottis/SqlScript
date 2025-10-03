@@ -5,7 +5,7 @@ namespace SqlScriptBuilder.Library.Read.Interfaces
 {
     internal interface IWhereBuilder : ISqlScriptBuilder
     {
-        IWhereBuilder Where( string table );
+        IWhereBuilder Where(string condition);
         ISqlScript Build();
     }
 }
