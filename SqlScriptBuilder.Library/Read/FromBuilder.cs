@@ -1,18 +1,39 @@
-﻿using SqlScriptBuilder.Library.Read.Interfaces;
+﻿using SqlScriptBuilder.Library.Interfaces;
+using SqlScriptBuilder.Library.Read.Interfaces;
 using System.Text;
 
 namespace SqlScriptBuilder.Library.Read
 {
     internal class FromBuilder : IFromBuilder
     {
-        public IFromBuilder AddTable( string table )
+        private IList<string> _tables;
+
+        public FromBuilder()
         {
-            throw new NotImplementedException();
+            _tables = new List<string>();
         }
 
-        public StringBuilder Build()
+        public IFromBuilder From( string table )
         {
-            throw new NotImplementedException();
+            if ( !_tables.Contains( table ) )
+            {
+                _tables.Add( table );
+            }
+
+            return this;
+        }
+
+        public ISqlScript Build()
+        {
+            var result = new StringBuilder();
+
+            if ( _tables.Any() )
+            {
+                result.AppendLine( "FROM" )
+                    .AppendLine( string.Join( ", ", _tables ) );
+            }
+
+            return new SqlReadScript( result );
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using SqlScriptBuilder.Library.Read.Interfaces;
+﻿using SqlScriptBuilder.Library.Interfaces;
+using SqlScriptBuilder.Library.Read.Interfaces;
 using System.Text;
 
 namespace SqlScriptBuilder.Library.Read
@@ -40,7 +41,7 @@ namespace SqlScriptBuilder.Library.Read
             return this;
         }
 
-        public StringBuilder Build()
+        public ISqlScript Build()
         {
             var script = new StringBuilder();
             var fields = GetFields();
@@ -48,7 +49,7 @@ namespace SqlScriptBuilder.Library.Read
             script.AppendLine( "SELECT" );
             script.AppendLine( string.Join( ", ", fields ) );
 
-            return script;
+            return new SqlReadScript( script );
         }
     }
 }

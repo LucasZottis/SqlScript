@@ -7,34 +7,34 @@ namespace SqlScriptBuilder.Library
 {
     internal class SqlReadScriptBuilder : ISqlReadScriptBuilder
     {
-        //private IDictionary<string, string> _fields;
-        //private IList<string> _tables;
-
         private ISelectBuilder _selectBuilder;
         private IFromBuilder _fromBuilder;
-
-        //public SqlReadScriptBuilder()
-        //{
-        //    _fields = new Dictionary<string, string>();
-        //    _tables = new List<string>();
-        //}
-
-        //private string GetFields()
-        //{
-        //    return string.Join( ", ", _fields.Select( f => $"{f.Key} AS {f.Value}" ) );
-        //}
+        private IFromBuilder _whereBuilder;
 
         public ISqlScript Build()
         {
-            if ( _selectBuilder == null )
-                throw new InvalidOperationException( "No fields selected. Use the Select() method to add fields." );
+            ISqlScript selectScript = null;
+            ISqlScript fromscript = null;
+            ISqlScript? whereScript = null;
 
             if ( _selectBuilder == null )
                 throw new InvalidOperationException( "No fields selected. Use the Select() method to add fields." );
+
+            if ( _fromBuilder == null )
+                throw new InvalidOperationException( "No tables selected. Use the From() method to add tables." );
+
+            selectScript = _selectBuilder.Build();
+            fromscript = _fromBuilder.Build();
+
+            if ( _whereBuilder != null )
+                whereScript = _whereBuilder.Build();
 
             var script = new StringBuilder()
-                .Append( _selectBuilder.Build() )
-                .Append( _fromBuilder.Build() );
+                .Append( selectScript.GetScript() )
+                .Append( fromscript.GetScript() );
+
+            if ( whereScript != null )
+                script.Append( whereScript.GetScript() );
 
             return new SqlReadScript( script );
         }
@@ -43,10 +43,8 @@ namespace SqlScriptBuilder.Library
         {
             if ( _fromBuilder == null )
                 _fromBuilder = new FromBuilder();
-            //if ( !_tables.Contains( table ) )
-            //{
-            //    _tables.Add( table );
-            //}
+
+            _fromBuilder.From( table );
 
             return this;
         }

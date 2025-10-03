@@ -2,6 +2,6 @@
 {
     public interface ISqlScript
     {
-        string ToString();
+        string GetScript();
     }
 }

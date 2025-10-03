@@ -3,8 +3,9 @@ using System.Text;
 
 namespace SqlScriptBuilder.Library.Read.Interfaces
 {
-    internal interface ISelectBuilder : ISqlScriptBuilder
+    internal interface IWhereBuilder : ISqlScriptBuilder
     {
-        ISelectBuilder AddField(string field);
+        IWhereBuilder Where( string table );
+        ISqlScript Build();
     }
 }

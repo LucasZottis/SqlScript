@@ -12,7 +12,7 @@ namespace SqlScriptBuilder.Library
             _script = script;
         }
 
-        public override string ToString()
+        public string GetScript()
         {
             return _script.ToString();
         }

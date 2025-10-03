@@ -1,10 +1,10 @@
-﻿using System.Text;
+﻿using SqlScriptBuilder.Library.Interfaces;
+using System.Text;
 
 namespace SqlScriptBuilder.Library.Read.Interfaces
 {
-    internal interface IFromBuilder
+    internal interface IFromBuilder : ISqlScriptBuilder
     {
-        IFromBuilder AddTable( string table );
-        StringBuilder Build();
+        IFromBuilder From( string table );
     }
 }
