@@ -1,9 +1,8 @@
 ﻿using SqlScriptBuilder.Library.Interfaces;
 
-namespace SqlScriptBuilder.Library.Read.Interfaces
+namespace SqlScriptBuilder.Library.Read.Interfaces;
+
+public interface IOrderByBuilder : ISqlScriptBuilder
 {
-    public interface IOrderByBuilder : ISqlScriptBuilder
-    {
-        IOrderByBuilder OrderBy(string field);
-    }
+    IOrderByBuilder By(string field);
 }

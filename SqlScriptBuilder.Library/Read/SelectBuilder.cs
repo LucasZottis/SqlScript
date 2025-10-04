@@ -6,35 +6,106 @@ namespace SqlScriptBuilder.Library.Read
 {
     internal class SelectBuilder : ISelectBuilder
     {
-        private IDictionary<string, string> _fields;
+        private readonly ISqlReadScriptBuilder _sqlReadScriptBuilder;
+        private IList<FieldBuilder> _fields;
 
-        public SelectBuilder()
+        internal SelectBuilder()
         {
-            _fields = new Dictionary<string, string>();
+            _fields = new List<FieldBuilder>();
+        }
+
+        public SelectBuilder( ISqlReadScriptBuilder sqlReadScriptBuilder ) : this()
+        {
+            _sqlReadScriptBuilder = sqlReadScriptBuilder;
         }
 
         private IEnumerable<string> GetFields()
         {
             return _fields.Select( f =>
             {
-                if ( f.Key == f.Value )
-                    return f.Key;
-
-                return $"{f.Key} AS {f.Value}";
+                return f.Build().GetScript();
             } );
         }
 
-        public ISelectBuilder AddField( string field )
+        private bool CheckFieldExists( string alias )
         {
-            return AddField( field, field );
+            return _fields.Any( f => f.Alias == alias );
         }
 
-        private ISelectBuilder AddField( string field, string value )
+        private ISelectBuilder AddField( object field, string? fieldAlias = null, string? tableName = null )
         {
-            if ( !_fields.ContainsKey( field ) )
-                _fields.Add(field, value);
+            if ( !CheckFieldExists( fieldAlias ?? field.ToString() ?? string.Empty ) )
+            {
+                var fieldBuilder = new FieldBuilder( field );
+
+                if ( !string.IsNullOrEmpty( fieldAlias ) )
+                    fieldBuilder.SetFieldAlias( fieldAlias );
+
+                if ( !string.IsNullOrEmpty( tableName ) )
+                    fieldBuilder.SetTableName( tableName );
+
+                _fields.Add( fieldBuilder );
+            }
 
             return this;
+        }
+
+        public ISelectBuilder Field( string field )
+        {
+            var parts = field.Split( '.' );
+
+            if ( parts.Length == 2 )
+                throw new ArgumentException(
+                    "Field cannot contain table alias. Use Field(string tableAlias, string field, string fieldAlias) or Field(string tableAlias, string field) methods instead."
+                );
+
+            return AddField( field );
+        }
+
+        public ISelectBuilder Field( SqlFunctionBuilder sqlFunctionBuilder )
+        {
+            var fieldName = sqlFunctionBuilder.GetFieldAlias();
+
+            if ( string.IsNullOrEmpty( fieldName ) )
+                throw new ArgumentException( "Field alias is required when using SqlFunctionBuilder in SELECT section." );
+
+            return AddField( sqlFunctionBuilder );
+        }
+
+        public ISelectBuilder Field( object field, string fieldAlias )
+        {
+            if ( string.IsNullOrEmpty( fieldAlias ) )
+                throw new ArgumentNullException( nameof( fieldAlias ) );
+
+            return AddField( field, fieldAlias );
+        }
+
+        public ISelectBuilder Field( string tableAlias, string field )
+        {
+            var parts = field.Split( " AS " );
+
+            if ( parts.Length == 2 )
+                throw new ArgumentException(
+                    "Field cannot contain field alias. Use Field(string tableAlias, string field, string fieldAlias) method instead."
+                );
+
+            return AddField( field, null, tableAlias );
+        }
+
+        public ISelectBuilder Field( string tableAlias, string field, string fieldAlias )
+        {
+            if ( string.IsNullOrEmpty( tableAlias ) )
+                throw new ArgumentNullException( nameof( tableAlias ) );
+
+            if ( string.IsNullOrEmpty( fieldAlias ) )
+                throw new ArgumentNullException( nameof( fieldAlias ) );
+
+            return AddField( field, fieldAlias, tableAlias );
+        }
+
+        public IFromBuilder From()
+        {
+            return _sqlReadScriptBuilder.From();
         }
 
         public ISqlScript Build()
@@ -46,11 +117,6 @@ namespace SqlScriptBuilder.Library.Read
             script.AppendLine( string.Join( $", {Environment.NewLine}", fields ) );
 
             return new SqlReadScript( script );
-        }
-
-        public ISelectBuilder AddIsNull(string checkExpression, string replacementValue, string fieldName)
-        {
-            return AddField(fieldName, $"isnull( {checkExpression}, {replacementValue} )");
         }
     }
 }

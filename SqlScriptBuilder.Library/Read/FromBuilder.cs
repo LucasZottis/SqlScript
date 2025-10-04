@@ -6,13 +6,19 @@ namespace SqlScriptBuilder.Library.Read
 {
     internal class FromBuilder : IFromBuilder
     {
+        private readonly ISqlReadScriptBuilder _sqlReadScriptBuilder;
         private readonly IList<string> _tables;
         private readonly IList<IJoinBuilder> _joinBuilders;
 
-        public FromBuilder()
+        internal FromBuilder()
         {
             _tables = new List<string>();
             _joinBuilders = new List<IJoinBuilder>();
+        }
+
+        internal FromBuilder( ISqlReadScriptBuilder sqlReadScriptBuilder) : this()
+        {
+            _sqlReadScriptBuilder = sqlReadScriptBuilder;
         }
 
         public IFromBuilder From(string table)
@@ -43,6 +49,21 @@ namespace SqlScriptBuilder.Library.Read
             joinBuilder.Join(joinedTable, joinedTableAlias, joinedTableField, tableSource, tableSourceField, otherConditions);
             _joinBuilders.Add(joinBuilder);
             return this;
+        }
+
+        public IFromBuilder Table( string table )
+        {
+            return From( table );
+        }
+
+        public IGroupByBuilder Group()
+        {
+            return _sqlReadScriptBuilder.GroupBy();
+        }
+
+        public IOrderByBuilder Order()
+        {
+            return _sqlReadScriptBuilder.OrderBy();
         }
     }
 }

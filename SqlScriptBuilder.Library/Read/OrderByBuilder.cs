@@ -24,6 +24,11 @@ namespace SqlScriptBuilder.Library.Read
             return new SqlReadScript(script);
         }
 
+        public IOrderByBuilder By( string field )
+        {
+            return OrderBy( field );
+        }
+
         public IOrderByBuilder OrderBy(string field)
         {
             if (!_fields.Contains(field))

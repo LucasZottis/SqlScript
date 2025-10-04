@@ -12,6 +12,11 @@ namespace SqlScriptBuilder.Library
             _script = script;
         }
 
+        public SqlReadScript( string script )
+        {
+            _script = new StringBuilder( script );
+        }
+
         public string GetScript()
         {
             return _script.ToString();

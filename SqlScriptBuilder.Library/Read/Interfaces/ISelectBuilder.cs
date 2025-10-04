@@ -3,9 +3,14 @@ using System.Text;
 
 namespace SqlScriptBuilder.Library.Read.Interfaces
 {
-    internal interface ISelectBuilder : ISqlScriptBuilder
+    public interface ISelectBuilder : ISqlScriptBuilder
     {
-        ISelectBuilder AddField(string field);
-        ISelectBuilder AddIsNull(string checkExpression, string replacementValue, string fieldName);
+        ISelectBuilder Field( string field );
+        ISelectBuilder Field( object field, string fieldAlias );
+        ISelectBuilder Field( string tableAlias, string field );
+        ISelectBuilder Field( string tableAlias, string field, string fieldAlias );
+        ISelectBuilder Field( SqlFunctionBuilder sqlFunctionBuilder );
+
+        IFromBuilder From();
     }
 }

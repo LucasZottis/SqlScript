@@ -1,16 +1,14 @@
 ﻿using SqlScriptBuilder.Library.Interfaces;
 
-namespace SqlScriptBuilder.Library.Read.Interfaces
-{
-    internal interface IFromBuilder : ISqlScriptBuilder
-    {
-        IFromBuilder From( string table );
-        //IFromBuilder Join( string joinedTable, string tableSource, string tableSourceField, IJoinBuilder joinBuilder );
-        //IFromBuilder Join( string joinedTable, string joinedTableField, string tableSource, string tableSourceField, IJoinBuilder joinBuilder);
-        IFromBuilder Join( string joinedTable, string joinedTableAlias, string joinedTableField, string tableSource, string tableSourceField, IJoinBuilder joinBuilder, string otherConditions = null);
+namespace SqlScriptBuilder.Library.Read.Interfaces;
 
-        //IFromBuilder InnerJoin(string joinedTable, string tableSource, string field);
-        //IFromBuilder InnerJoin(string joinedTable, string joinedTableField, string tableSource, string tableSourceField);
-        //IFromBuilder InnerJoin(string joinedTable, string joinedTableAlias, string joinedTableField, string tableSource, string tableSourceField);
-    }
+public interface IFromBuilder : ISqlScriptBuilder
+{
+    IFromBuilder Table( string table );
+    IFromBuilder Join( string joinedTable, string joinedTableAlias, string joinedTableField, string tableSource, string tableSourceField, IJoinBuilder joinBuilder, string otherConditions = null);
+
+    //internal bool HasTable( string tableName );
+
+    IGroupByBuilder Group();
+    IOrderByBuilder Order();
 }
