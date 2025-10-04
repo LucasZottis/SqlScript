@@ -21,7 +21,7 @@ namespace SqlScriptBuilder.Library.Read
             _sqlReadScriptBuilder = sqlReadScriptBuilder;
         }
 
-        public IFromBuilder From(string table)
+        private IFromBuilder AddTable(string table)
         {
             if (!_tables.Contains(table))
                 _tables.Add(table);
@@ -39,21 +39,14 @@ namespace SqlScriptBuilder.Library.Read
 
             if (_joinBuilders.Any())
                 foreach (var joinBuilder in _joinBuilders)
-                    script.Append(joinBuilder.Build().GetScript());
+                    script.AppendLine(joinBuilder.Build().GetScript());
 
             return new SqlReadScript(script);
         }
 
-        public IFromBuilder Join(string joinedTable, string joinedTableAlias, string joinedTableField, string tableSource, string tableSourceField, IJoinBuilder joinBuilder, string otherConditions = null)
-        {
-            joinBuilder.Join(joinedTable, joinedTableAlias, joinedTableField, tableSource, tableSourceField, otherConditions);
-            _joinBuilders.Add(joinBuilder);
-            return this;
-        }
-
         public IFromBuilder Table( string table )
         {
-            return From( table );
+            return AddTable( table );
         }
 
         public IGroupByBuilder Group()
@@ -64,6 +57,66 @@ namespace SqlScriptBuilder.Library.Read
         public IOrderByBuilder Order()
         {
             return _sqlReadScriptBuilder.OrderBy();
+        }
+
+        public IFromBuilder InnerJoin( string joinedTable, string joinedTableField, string tableSource, string tableSourceField, string? joinedTableAlias = null, string? otherConditions = null )
+        {
+            var joinBuilder = new InnerJoinBuilder(
+                joinedTable,
+                joinedTableField,
+                tableSource,
+                tableSourceField
+            );
+
+            if ( !string.IsNullOrWhiteSpace( joinedTableAlias ) )
+                joinBuilder.SetAlias( joinedTableAlias );
+
+            if ( !string.IsNullOrWhiteSpace( otherConditions ) )
+                joinBuilder.SetOtherConditions( otherConditions );
+
+            _joinBuilders.Add( joinBuilder );
+
+            return this;
+        }
+
+        public IFromBuilder InnerJoin( string joinedTable, string tableSource, string fieldName, string? otherConditions = null )
+        {
+            return InnerJoin( joinedTable, fieldName, tableSource, fieldName, null, otherConditions );
+        }
+
+        public IFromBuilder InnerJoin( string joinedTable, string joinedTableAlias, string tableSource, string fieldName, string? otherConditions = null )
+        {
+            return InnerJoin( joinedTable, fieldName, tableSource, fieldName, joinedTableAlias, otherConditions );
+        }
+
+        public IFromBuilder LeftJoin( string joinedTable, string tableSource, string fieldName, string? otherConditions = null )
+        {
+            return LeftJoin( joinedTable, fieldName, tableSource, fieldName, null, otherConditions );
+        }
+
+        public IFromBuilder LeftJoin( string joinedTable, string joinedTableAlias, string tableSource, string fieldName, string? otherConditions = null )
+        {
+            return LeftJoin( joinedTable, fieldName, tableSource, fieldName, joinedTableAlias, otherConditions );
+        }
+
+        public IFromBuilder LeftJoin( string joinedTable, string joinedTableField, string tableSource, string tableSourceField, string? joinedTableAlias = null, string? otherConditions = null )
+        {
+            var joinBuilder = new LeftJoinBuilder(
+                joinedTable,
+                joinedTableField,
+                tableSource,
+                tableSourceField
+            );
+
+            if ( !string.IsNullOrWhiteSpace( joinedTableAlias ) )
+                joinBuilder.SetAlias( joinedTableAlias );
+
+            if ( !string.IsNullOrWhiteSpace( otherConditions ) )
+                joinBuilder.SetOtherConditions( otherConditions );
+
+            _joinBuilders.Add( joinBuilder );
+
+            return this;
         }
     }
 }

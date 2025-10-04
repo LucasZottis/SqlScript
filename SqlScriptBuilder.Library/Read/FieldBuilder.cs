@@ -46,7 +46,7 @@ internal class FieldBuilder : ISqlScriptBuilder
             var script = $"{_tableName}.{_field}";
 
             if ( !string.IsNullOrEmpty( Alias ) )
-                script += $"{script} AS {Alias}";
+                script += $" AS {Alias}";
 
             return new SqlReadScript( script );
         }

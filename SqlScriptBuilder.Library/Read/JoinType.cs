@@ -2,9 +2,17 @@
 
 namespace SqlScriptBuilder.Library.Read
 {
-    internal static class JoinType
+    internal class JoinType
     {
-        public static IJoinBuilder InnerJoin => new InnerJoinBuilder();
-        public static IJoinBuilder LeftJoin => new LeftJoinBuilder();
+        private readonly string _type;
+        public JoinType( string type)
+        {
+            _type = type;
+        }
+
+        public override string ToString()
+        {
+            return _type;
+        }
     }
 }

@@ -1,68 +1,75 @@
 ﻿using SqlScriptBuilder.Library.Interfaces;
 using SqlScriptBuilder.Library.Read.Interfaces;
-using System.Text;
 
 namespace SqlScriptBuilder.Library.Read
 {
     internal abstract class JoinBuilder : IJoinBuilder
     {
-        /// <summary>
-        /// Field 1: JoinedTable
-        /// Field 2: JoinedTableAlias
-        /// Field 3: JoinedTableField
-        /// Field 3: TableSource
-        /// Field 4: TableSourceField
-        /// </summary>
-        protected IList<Tuple<string, string, string, string, string, string>> Joins { get; private set; }
+        protected string JoinedTable { get; private set; }
+        protected string? JoinedTableAlias { get; private set; }
+        protected string JoinedTableField { get; private set; }
+        protected string TableSource { get; private set; }
+        protected string TableSourceField { get; private set; }
+        protected string? OtherConditions { get; private set; }
+        protected JoinType JoinType { get; set; }
 
-        public JoinBuilder()
+        public JoinBuilder( string joinedTable, string joinedTableField, string tableSource, string tableSourceField )
         {
-            Joins = new List<Tuple<string, string, string, string, string, string>>();
+            JoinedTable = joinedTable;
+            JoinedTableField = joinedTableField;
+            TableSource = tableSource;
+            TableSourceField = tableSourceField;
+            ValidateJoin();
         }
 
-        private IEnumerable<string> GetJoins()
+        private void ValidateJoin()
         {
-            if (!Joins.Any())
-                return [];
+            if ( string.IsNullOrWhiteSpace( JoinedTable ) )
+                throw new ArgumentException( "Joined table is required." );
 
-            return Joins.Select(join => BuildJoin(join));
+            if ( string.IsNullOrWhiteSpace( JoinedTableField ) )
+                throw new ArgumentException( "Joined table field is required." );
+
+            if ( string.IsNullOrWhiteSpace( TableSource ) )
+                throw new ArgumentException( "Table source is required." );
+
+            if ( string.IsNullOrWhiteSpace( TableSourceField ) )
+                throw new ArgumentException( "Table source field is required." );
         }
-
-        protected abstract string BuildJoin(Tuple<string, string, string, string, string, string> join);
 
         public ISqlScript Build()
         {
-            var script = new StringBuilder();
-            var joins = GetJoins();
+            var script = $"{JoinType} join {JoinedTable} ";
+            var joinedTable = JoinedTable;
 
-            foreach (var join in joins)
-                script.AppendLine(join);
+            if ( !string.IsNullOrEmpty( JoinedTableAlias ) && JoinedTable != JoinedTableAlias )
+            {
+                joinedTable = JoinedTableAlias;
+                script += $"as {joinedTable} ";
+            }
 
-            return new SqlReadScript(script);
+            script += $"on {joinedTable}.{JoinedTableField} = {TableSource}.{TableSourceField}";
+
+            if ( !string.IsNullOrEmpty( OtherConditions ) )
+                script += $" {OtherConditions}";
+
+            return new SqlReadScript( script );
         }
 
-        public IJoinBuilder Join(string joinedTable, string tableSource, string field)
+        public void SetAlias( string alias )
         {
-            return Join(joinedTable, field, tableSource, field);
+            if ( string.IsNullOrWhiteSpace( alias ) )
+                throw new ArgumentException( "Alias cannot be null or whitespace.", nameof( alias ) );
+
+            JoinedTableAlias = alias;
         }
 
-        public IJoinBuilder Join(string joinedTable, string joinedTableField, string tableSource, string tableSourceField)
+        public void SetOtherConditions( string otherConditions )
         {
-            return Join(joinedTable, joinedTable, joinedTableField, tableSource, tableSourceField);
-        }
+            if ( string.IsNullOrWhiteSpace( otherConditions ) )
+                throw new ArgumentException( "Other conditions cannot be null or whitespace.", nameof( otherConditions ) );
 
-        public IJoinBuilder Join(string joinedTable, string joinedTableAlias, string joinedTableField, string tableSource, string tableSourceField)
-        {
-            Joins.Add(new(joinedTable, joinedTableAlias, joinedTableField, tableSource, tableSourceField, null));
-
-            return this;
-        }
-
-        public IJoinBuilder Join(string joinedTable, string joinedTableAlias, string joinedTableField, string tableSource, string tableSourceField, string otherConditions = null)
-        {
-            Joins.Add(new(joinedTable, joinedTableAlias, joinedTableField, tableSource, tableSourceField, otherConditions));
-
-            return this;
+            OtherConditions = otherConditions;
         }
     }
 }
