@@ -75,7 +75,20 @@ namespace SqlScriptBuilder
                 .LeftJoin( "PESSOA_FISICA", "PESSOA", "COD_PESSOA" )
                 .InnerJoin( "ENDERECO", "ENDERECO", "COD_PESSOA", "PESSOA", "COD_PESSOA", "AND TIP_ENDERECO = 0" )
                 .InnerJoin( "CIDADE", "ENDERECO", "COD_CIDADE" )
-                .InnerJoin( "ESTADO", "CIDADE", "COD_ESTADO" );
+                .InnerJoin( "ESTADO", "CIDADE", "COD_ESTADO" )
+                .Where()
+                .Condition( "pessoa", "cod_pessoa", ConditionalOperatorBuilderFactory.Equal(5) )
+                .GreaterThan( "pessoa", "cod_pessoa", 1 )
+                .GreaterOrEqualThan( "pessoa", "cod_pessoa", 2 )
+                .Equal( "pessoa", "cod_pessoa", 5 )
+                .LessOrEqualThan( "pessoa", "cod_pessoa", 3 )
+                .LessThan( "pessoa", "cod_pessoa", 4 )
+                .Different( "pessoa", "cod_pessoa", 6 )
+                .Like( "pessoa", "NOM_PESSOA", "Antonio%" )
+                .NotLike( "pessoa", "NOM_PESSOA", "%Souza" )
+                .In( "pessoa", "cod_pessoa", Enumerable.Range(1, 5), true )
+                .NotIn( "pessoa", "cod_pessoa", Enumerable.Range( 1, 3 ), true )
+                .Between( "pessoa", "dat_cadastro", new DateTime( 2025, 09, 01 ), new DateTime( 2025, 09, 30 ) );
             //.OrderBy( "PESSOA.NOM_PESSOA" )
             //.Build();
 

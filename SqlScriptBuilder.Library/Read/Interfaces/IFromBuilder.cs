@@ -13,6 +13,7 @@ public interface IFromBuilder : ISqlScriptBuilder
     IFromBuilder LeftJoin( string joinedTable, string joinedTableAlias, string tableSource, string fieldName, string? otherConditions = null );
     IFromBuilder LeftJoin( string joinedTable, string joinedTableField, string tableSource, string tableSourceField, string? joinedTableAlias = null, string? otherConditions = null );
 
+    IWhereBuilder Where();
     IGroupByBuilder Group();
     IOrderByBuilder Order();
 }

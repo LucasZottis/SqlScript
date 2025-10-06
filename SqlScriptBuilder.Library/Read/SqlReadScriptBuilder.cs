@@ -47,6 +47,11 @@ internal class SqlReadScriptBuilder : ISqlReadScriptBuilder
         return _orderByBuilder ??= new OrderByBuilder();
     }
 
+    public IWhereBuilder Where()
+    {
+        return _whereBuilder ??= new WhereBuilder();
+    }
+
     //public ISqlReadScriptBuilder From(string table)
     //{
     //    CheckFromBuilderIsNull();

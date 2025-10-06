@@ -49,16 +49,6 @@ namespace SqlScriptBuilder.Library.Read
             return AddTable( table );
         }
 
-        public IGroupByBuilder Group()
-        {
-            return _sqlReadScriptBuilder.GroupBy();
-        }
-
-        public IOrderByBuilder Order()
-        {
-            return _sqlReadScriptBuilder.OrderBy();
-        }
-
         public IFromBuilder InnerJoin( string joinedTable, string joinedTableField, string tableSource, string tableSourceField, string? joinedTableAlias = null, string? otherConditions = null )
         {
             var joinBuilder = new InnerJoinBuilder(
@@ -117,6 +107,21 @@ namespace SqlScriptBuilder.Library.Read
             _joinBuilders.Add( joinBuilder );
 
             return this;
+        }
+
+        public IWhereBuilder Where()
+        {
+            return _sqlReadScriptBuilder.Where();
+        }
+
+        public IGroupByBuilder Group()
+        {
+            return _sqlReadScriptBuilder.GroupBy();
+        }
+
+        public IOrderByBuilder Order()
+        {
+            return _sqlReadScriptBuilder.OrderBy();
         }
     }
 }
