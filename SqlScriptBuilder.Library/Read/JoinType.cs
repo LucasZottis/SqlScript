@@ -1,18 +1,16 @@
-﻿using SqlScriptBuilder.Library.Read.Interfaces;
+﻿namespace SqlScriptBuilder.Library.Read;
 
-namespace SqlScriptBuilder.Library.Read
+internal class JoinType
 {
-    internal class JoinType
-    {
-        private readonly string _type;
-        public JoinType( string type)
-        {
-            _type = type;
-        }
+    private readonly string _type;
 
-        public override string ToString()
-        {
-            return _type;
-        }
+    public JoinType( string type)
+    {
+        _type = type;
+    }
+
+    public override string ToString()
+    {
+        return _type;
     }
 }

@@ -27,40 +27,16 @@ public static class ConditionalOperatorBuilderFactory
         => new LikeConditionalOperatorBuilder( value, true );
 
     public static ConditionalOperatorBuilder In( object values )
-        => new InConditionalOperatorBuilder( values );
+        => new InConditionalOperatorBuilder<object>( values );
 
-    public static ConditionalOperatorBuilder In( IEnumerable<object> values )
-        => new InConditionalOperatorBuilder( values );
-
-    public static ConditionalOperatorBuilder In( IEnumerable<int> values )
-        => new InConditionalOperatorBuilder( values );
-
-    public static ConditionalOperatorBuilder In( IEnumerable<double> values )
-        => new InConditionalOperatorBuilder( values );
-
-    public static ConditionalOperatorBuilder In( IEnumerable<decimal> values )
-        => new InConditionalOperatorBuilder( values );
-
-    public static ConditionalOperatorBuilder In( IEnumerable<string> values )
-        => new InConditionalOperatorBuilder( values );
+    public static ConditionalOperatorBuilder In<TValue>( IEnumerable<TValue> values )
+        => new InConditionalOperatorBuilder<TValue>( values );
 
     public static ConditionalOperatorBuilder NotIn( object values )
-        => new InConditionalOperatorBuilder( values, true );
+        => new InConditionalOperatorBuilder<object>(values);
 
-    public static ConditionalOperatorBuilder NotIn( IEnumerable<object> values )
-        => new InConditionalOperatorBuilder( values, true );
-
-    public static ConditionalOperatorBuilder NotIn( IEnumerable<int> values )
-        => new InConditionalOperatorBuilder( values, true );
-
-    public static ConditionalOperatorBuilder NotIn( IEnumerable<double> values )
-        => new InConditionalOperatorBuilder( values, true );
-
-    public static ConditionalOperatorBuilder NotIn( IEnumerable<decimal> values )
-        => new InConditionalOperatorBuilder( values, true );
-
-    public static ConditionalOperatorBuilder NotIn( IEnumerable<string> values )
-        => new InConditionalOperatorBuilder( values, true );
+    public static ConditionalOperatorBuilder NotIn<TValue>( IEnumerable<TValue> values )
+        => new InConditionalOperatorBuilder<TValue>( values, true );
 
     //public static ConditionalOperatorBuilder Is( object? value )
     //    => new IsConditionalOperatorBuilder( value );

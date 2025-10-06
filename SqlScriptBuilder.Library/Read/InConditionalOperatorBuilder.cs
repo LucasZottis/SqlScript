@@ -2,7 +2,7 @@
 
 namespace SqlScriptBuilder.Library.Read;
 
-internal class InConditionalOperatorBuilder : ConditionalOperatorBuilder
+internal class InConditionalOperatorBuilder<TValue> : ConditionalOperatorBuilder
 {
     private readonly bool _denial;
 
@@ -12,31 +12,7 @@ internal class InConditionalOperatorBuilder : ConditionalOperatorBuilder
         _denial = denial;
     }
 
-    public InConditionalOperatorBuilder( IEnumerable<object> values, bool denial = false )
-        : base( ConditionalOperatorValue.In, values )
-    {
-        _denial = denial;
-    }
-
-    public InConditionalOperatorBuilder( IEnumerable<int> values, bool denial = false )
-        : base( ConditionalOperatorValue.In, values )
-    {
-        _denial = denial;
-    }
-
-    public InConditionalOperatorBuilder( IEnumerable<double> values, bool denial = false )
-        : base( ConditionalOperatorValue.In, values )
-    {
-        _denial = denial;
-    }
-
-    public InConditionalOperatorBuilder( IEnumerable<decimal> values, bool denial = false )
-        : base( ConditionalOperatorValue.In, values )
-    {
-        _denial = denial;
-    }
-
-    public InConditionalOperatorBuilder( IEnumerable<string> values, bool denial = false )
+    public InConditionalOperatorBuilder( IEnumerable<TValue> values, bool denial = false )
         : base( ConditionalOperatorValue.In, values )
     {
         _denial = denial;
@@ -44,12 +20,12 @@ internal class InConditionalOperatorBuilder : ConditionalOperatorBuilder
 
     public override ISqlScript Build()
     {
-        var values = Value as IEnumerable<object>;
+        var values = Value as IEnumerable<TValue>;
 
         if ( values is null || !values.Any() )
             throw new ArgumentException( "Values cannot be null or empty." );
 
-        var formattedValues = string.Join( ", ", values.Select( SqlValueFormatter.Format ) );
+        var formattedValues = string.Join( ", ", values.Select( v => SqlValueFormatter.Format(v) ) );
         var denialText = _denial ? "NOT " : "";
 
         return new SqlReadScript( $"{denialText}{ConditionalOperator} ({formattedValues})" );

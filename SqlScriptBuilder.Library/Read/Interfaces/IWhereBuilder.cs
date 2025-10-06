@@ -4,7 +4,6 @@ namespace SqlScriptBuilder.Library.Read.Interfaces;
 
 public interface IWhereBuilder : ISqlScriptBuilder
 {
-    //IWhereBuilder Condition( string condition );
     IWhereBuilder Condition( string tableAlias, string fieldName, ConditionalOperatorBuilder operatorBuilder, bool isOrCombiner = false );
     IWhereBuilder Condition( SqlFunctionBuilder sqlFunctionBuilder, ConditionalOperatorBuilder operatorBuilder, bool isOrCombiner = false );
 
@@ -43,14 +42,12 @@ public interface IWhereBuilder : ISqlScriptBuilder
     IWhereBuilder NotLike( string tableAlias, string fieldName, string value, bool isOrCombiner = false );
 
     IWhereBuilder In( string tableAlias, string fieldName, object value, bool isOrCombiner = false );
-    //IWhereBuilder In( string tableAlias, string fieldName, IEnumerable<object> list, bool isOrCombiner = false );
     IWhereBuilder In( string tableAlias, string fieldName, IEnumerable<int> list, bool isOrCombiner = false );
     IWhereBuilder In( string tableAlias, string fieldName, IEnumerable<double> list, bool isOrCombiner = false );
     IWhereBuilder In( string tableAlias, string fieldName, IEnumerable<decimal> list, bool isOrCombiner = false );
     IWhereBuilder In( string tableAlias, string fieldName, IEnumerable<string> list, bool isOrCombiner = false );
 
     IWhereBuilder NotIn( string tableAlias, string fieldName, object value, bool isOrCombiner = false );
-    //IWhereBuilder NotIn( string tableAlias, string fieldName, IEnumerable<object> list, bool isOrCombiner = false );
     IWhereBuilder NotIn( string tableAlias, string fieldName, IEnumerable<int> list, bool isOrCombiner = false );
     IWhereBuilder NotIn( string tableAlias, string fieldName, IEnumerable<double> list, bool isOrCombiner = false );
     IWhereBuilder NotIn( string tableAlias, string fieldName, IEnumerable<decimal> list, bool isOrCombiner = false );
@@ -62,4 +59,7 @@ public interface IWhereBuilder : ISqlScriptBuilder
     IWhereBuilder Between( string tableAlias, string fieldName, double firstValue, double lastValue, bool isOrCombiner = false );
     IWhereBuilder Between( string tableAlias, string fieldName, decimal firstValue, decimal lastValue, bool isOrCombiner = false );
     IWhereBuilder Between( string tableAlias, string fieldName, DateTime firstValue, DateTime lastValue, bool isOrCombiner = false );
+
+    IGroupByBuilder GroupBy();
+    IOrderByBuilder OrderBy();
 }

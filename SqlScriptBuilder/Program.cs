@@ -12,7 +12,7 @@ namespace SqlScriptBuilder
             var sql = script.GetScript();
 
             Console.WriteLine( sql.ToUpper() );
-            //Console.ReadLine();
+            Console.ReadLine();
         }
 
         private static ISqlScript ExampleZero()

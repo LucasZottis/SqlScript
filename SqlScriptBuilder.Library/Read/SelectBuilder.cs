@@ -1,5 +1,6 @@
 ﻿using SqlScriptBuilder.Library.Interfaces;
 using SqlScriptBuilder.Library.Read.Interfaces;
+using SqlScriptBuilder.Library.Read.Models;
 using System.Text;
 
 namespace SqlScriptBuilder.Library.Read
@@ -17,14 +18,6 @@ namespace SqlScriptBuilder.Library.Read
         public SelectBuilder( ISqlReadScriptBuilder sqlReadScriptBuilder ) : this()
         {
             _sqlReadScriptBuilder = sqlReadScriptBuilder;
-        }
-
-        private IEnumerable<string> GetFields()
-        {
-            return _fields.Select( f =>
-            {
-                return f.Build().GetScript();
-            } );
         }
 
         private bool CheckFieldExists( string alias )
@@ -110,13 +103,12 @@ namespace SqlScriptBuilder.Library.Read
 
         public ISqlScript Build()
         {
-            var script = new StringBuilder();
-            var fields = GetFields();
+            var selectSection = new SelectSection();
 
-            script.AppendLine( "SELECT" );
-            script.AppendLine( string.Join( $", {Environment.NewLine}", fields ) );
+            foreach (var builder in _fields)
+                selectSection.AddField((IField)builder.Build());
 
-            return new SqlReadScript( script );
+            return selectSection;
         }
     }
 }
