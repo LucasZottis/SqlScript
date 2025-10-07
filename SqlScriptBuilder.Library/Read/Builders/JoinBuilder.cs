@@ -4,7 +4,7 @@ using SqlScriptBuilder.Library.Read.Models;
 
 namespace SqlScriptBuilder.Library.Read.Builders;
 
-internal abstract class JoinBuilder : TableBuilder, IJoinBuilder
+internal abstract class JoinBuilder : IJoinBuilder
 {
     protected Join Join { get; set; }
 
@@ -13,25 +13,25 @@ internal abstract class JoinBuilder : TableBuilder, IJoinBuilder
         Join = join;
     }
 
-    //public ISqlScript Build()
-    //{
-    //    //var script = $"{JoinType} join {JoinedTable} ";
-    //    //var joinedTable = JoinedTable;
+    public ISqlScript Build()
+    {
+        //var script = $"{JoinType} join {JoinedTable} ";
+        //var joinedTable = JoinedTable;
 
-    //    //if (!string.IsNullOrEmpty(JoinedTableAlias) && JoinedTable != JoinedTableAlias)
-    //    //{
-    //    //    joinedTable = JoinedTableAlias;
-    //    //    script += $"as {joinedTable} ";
-    //    //}
+        //if (!string.IsNullOrEmpty(JoinedTableAlias) && JoinedTable != JoinedTableAlias)
+        //{
+        //    joinedTable = JoinedTableAlias;
+        //    script += $"as {joinedTable} ";
+        //}
 
-    //    //script += $"on {joinedTable}.{JoinedTableField} = {TableSource}.{TableSourceField}";
+        //script += $"on {joinedTable}.{JoinedTableField} = {TableSource}.{TableSourceField}";
 
-    //    //if (!string.IsNullOrEmpty(OtherConditions))
-    //    //    script += $" {OtherConditions}";
+        //if (!string.IsNullOrEmpty(OtherConditions))
+        //    script += $" {OtherConditions}";
 
-    //    //return new SqlReadScript(script);
-    //    return Join;
-    //}
+        //return new SqlReadScript(script);
+        return Join;
+    }
 
     public IJoinBuilder SetOtherConditions(string otherConditions)
     {
@@ -42,21 +42,45 @@ internal abstract class JoinBuilder : TableBuilder, IJoinBuilder
         return this;
     }
 
-    public IJoinBuilder SetTableSourceName(string tableSourceName)
+    public IJoinBuilder SetJoinedTable(string joinedTableName, string joinedTableFieldName, string? joinedTableAlias = null)
     {
-        Join.TableSourceName = tableSourceName;
+        Join.JoinedTable = new Table
+        {
+            TableName = joinedTableName,
+            Alias = joinedTableAlias,
+        };
+
+        Join.JoinedTableField = joinedTableFieldName;
         return this;
     }
 
-    public IJoinBuilder SetTableSourceField(string tableSourceField)
+    public IJoinBuilder SetTableSource(string tableSource, string tableSourceFieldName)
     {
-        Join.TableSourceField = tableSourceField;
+        Join.TableSource = new Table
+        {
+            TableName = tableSource,
+            Alias = null,
+        };
+
+        Join.TableSourceField = tableSourceFieldName;
         return this;
     }
 
-    public IJoinBuilder SetJoinedTableField(string joinedTableField)
-    {
-        Join.JoinedTableField = joinedTableField;
-        return this;
-    }
+    //public IJoinBuilder SetTableSourceName(string tableSourceName)
+    //{
+    //    Join.TableSource.TableName = tableSourceName;
+    //    return this;
+    //}
+
+    //public IJoinBuilder SetTableSourceField(string tableSourceField)
+    //{
+    //    Join.TableSourceField = tableSourceField;
+    //    return this;
+    //}
+
+    //public IJoinBuilder SetJoinedTableField(string joinedTableField)
+    //{
+    //    Join.JoinedTableField = joinedTableField;
+    //    return this;
+    //}
 }

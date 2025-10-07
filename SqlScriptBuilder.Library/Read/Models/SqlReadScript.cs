@@ -1,25 +1,30 @@
 ﻿using SqlScriptBuilder.Library.Interfaces;
-using System.Text;
 
-namespace SqlScriptBuilder.Library.Read.Models
+namespace SqlScriptBuilder.Library.Read.Models;
+
+internal class SqlReadScript : ISqlReadScript
 {
-    public class SqlReadScript : ISqlReadScript
+    private ISqlScript _selectSection;
+    public ISqlScript? FromSection { private get; set; }
+    public ISqlScript? WhereSection { private get; set; }
+    //private GroupBySection? _groupBySection;
+    //private OrderBySection? _orderBySection;
+
+    public SqlReadScript( SelectSection selectSection )
     {
-        private StringBuilder _script;
+        _selectSection = selectSection ?? throw new ArgumentNullException( nameof( selectSection ) );
+    }
 
-        public SqlReadScript( StringBuilder script )
-        {
-            _script = script;
-        }
+    public override string ToString()
+    {
+        var sql = _selectSection.ToString();
 
-        public SqlReadScript( string script )
-        {
-            _script = new StringBuilder( script );
-        }
+        if ( FromSection != null )
+            sql += FromSection.ToString();
 
-        public string GetScript()
-        {
-            return _script.ToString();
-        }
+        if ( WhereSection != null )
+            sql += WhereSection.ToString();
+
+        return sql;
     }
 }

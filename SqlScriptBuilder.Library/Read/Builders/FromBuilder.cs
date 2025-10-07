@@ -8,13 +8,13 @@ namespace SqlScriptBuilder.Library.Read.Builders
     internal class FromBuilder : IFromBuilder
     {
         private readonly ISqlReadScriptBuilder _sqlReadScriptBuilder;
-        private readonly IList<ITableBuilder> _builders;
-        private readonly FromSection _fromSection;
+        private readonly IList<ITableBuilder> _tableBuilders;
+        private readonly IList<IJoinBuilder> _joinBuilders;
 
         internal FromBuilder()
         {
-            _builders = [];
-            _fromSection = new FromSection();
+            _tableBuilders = [];
+            _joinBuilders = [];
         }
 
         internal FromBuilder(ISqlReadScriptBuilder sqlReadScriptBuilder) : this()
@@ -30,7 +30,7 @@ namespace SqlScriptBuilder.Library.Read.Builders
             if (!string.IsNullOrEmpty(alias))
                 builder.SetAlias(alias);
 
-            _builders.Add(builder);
+            _tableBuilders.Add(builder);
 
             return this;
         }
@@ -39,19 +39,13 @@ namespace SqlScriptBuilder.Library.Read.Builders
             where TJoin : IJoinBuilder, new()
         {
             var joinBuilder = new TJoin()
-                .SetJoinedTableField(joinedTableField)
-                .SetTableSourceName(tableSource)
-                .SetTableSourceField(tableSource);
-
-            joinBuilder.SetTableName(joinedTableAlias);
-
-            if (!string.IsNullOrWhiteSpace(joinedTableAlias))
-                joinBuilder.SetAlias(joinedTableAlias);
+                .SetJoinedTable(joinedTable, joinedTableField, joinedTableAlias)
+                .SetTableSource(tableSource, tableSourceField);
 
             if (!string.IsNullOrWhiteSpace(otherConditions))
                 joinBuilder.SetOtherConditions(otherConditions);
 
-            _builders.Add(joinBuilder);
+            _joinBuilders.Add(joinBuilder);
 
             return this;
 
@@ -59,10 +53,11 @@ namespace SqlScriptBuilder.Library.Read.Builders
 
         public ISqlScript Build()
         {
-            foreach(var builder in _builders)
-                _fromSection.AddTable((Table)builder.Build());
-
-            return _fromSection;
+            return new FromSection
+            {
+                Tables = _tableBuilders.Select(t => t.Build()).ToList(),
+                Joins = _joinBuilders.Select(t => t.Build()).ToList(),
+            };
         }
 
         public IFromBuilder Table(string table)
@@ -80,14 +75,14 @@ namespace SqlScriptBuilder.Library.Read.Builders
             return AddJoin<InnerJoinBuilder>(joinedTable, joinedTableField, tableSource, tableSourceField, joinedTableAlias, otherConditions);
         }
 
-        public IFromBuilder InnerJoin(string joinedTable, string tableSource, string fieldName, string? otherConditions = null)
-        {
-            return InnerJoin(joinedTable, fieldName, tableSource, fieldName, null, otherConditions);
-        }
-
         public IFromBuilder InnerJoin(string joinedTable, string joinedTableAlias, string tableSource, string fieldName, string? otherConditions = null)
         {
-            return InnerJoin(joinedTable, fieldName, tableSource, fieldName, joinedTableAlias, otherConditions);
+            return InnerJoin(joinedTable, fieldName, tableSource, fieldName, null, null);
+        }
+
+        public IFromBuilder InnerJoin(string joinedTable, string tableSource, string fieldName, string? otherConditions = null)
+        {
+            return InnerJoin(joinedTable, fieldName, tableSource, fieldName, null);
         }
 
         public IFromBuilder LeftJoin(string joinedTable, string tableSource, string fieldName, string? otherConditions = null)

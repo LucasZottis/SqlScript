@@ -1,7 +1,6 @@
 ﻿using SqlScriptBuilder.Library.Interfaces;
 using SqlScriptBuilder.Library.Read.Interfaces;
 using SqlScriptBuilder.Library.Read.Models;
-using System.Text;
 
 namespace SqlScriptBuilder.Library.Read.Builders;
 

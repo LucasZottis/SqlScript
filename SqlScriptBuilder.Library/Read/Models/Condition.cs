@@ -18,7 +18,7 @@ internal class Condition : ISqlScript
 
     public override string ToString()
     {
-        var sql = $"{Field.ToString()}{Operator.ToString()}";
+        var sql = $"{Field.ToString()} {Operator.ToString()}";
 
         if ( Combiner is not null )
             sql = $"{Combiner.ToString()} {sql}";

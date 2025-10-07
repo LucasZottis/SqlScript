@@ -18,11 +18,7 @@ internal class WhereSection : ISqlScript
 
     public override string ToString()
     {
-        var sql = "where";
-
-        foreach ( var condition in _conditions )
-            sql += $" {condition}";
-
-        return sql;
+        var conditionsList = _conditions.Select(c => c.ToString() ).ToList();
+        return $" where {string.Join(" ", conditionsList)}";
     }
 }

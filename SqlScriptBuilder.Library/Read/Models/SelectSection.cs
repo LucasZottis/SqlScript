@@ -28,7 +28,7 @@ internal class SelectSection : ISqlScript
     public override string ToString()
     {
         var fields = GetFields();
-        var sql = string.Join($", {Environment.NewLine}", fields);
+        var sql = $"Select {string.Join($", {Environment.NewLine}", fields)}";
 
         return sql;
     }
