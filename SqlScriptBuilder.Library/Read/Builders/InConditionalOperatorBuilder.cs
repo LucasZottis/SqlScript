@@ -1,6 +1,7 @@
 ﻿using SqlScriptBuilder.Library.Interfaces;
+using SqlScriptBuilder.Library.Read.Models;
 
-namespace SqlScriptBuilder.Library.Read;
+namespace SqlScriptBuilder.Library.Read.Builders;
 
 internal class InConditionalOperatorBuilder<TValue> : ConditionalOperatorBuilder
 {
@@ -20,14 +21,9 @@ internal class InConditionalOperatorBuilder<TValue> : ConditionalOperatorBuilder
 
     public override ISqlScript Build()
     {
-        var values = Value as IEnumerable<TValue>;
-
-        if ( values is null || !values.Any() )
-            throw new ArgumentException( "Values cannot be null or empty." );
-
-        var formattedValues = string.Join( ", ", values.Select( v => SqlValueFormatter.Format(v) ) );
-        var denialText = _denial ? "NOT " : "";
-
-        return new SqlReadScript( $"{denialText}{ConditionalOperator} ({formattedValues})" );
+        return new InConditionalOperator<TValue>( Value )
+        {
+            Denial = _denial
+        };
     }
 }

@@ -1,7 +1,8 @@
 ﻿using SqlScriptBuilder.Library.Interfaces;
+using SqlScriptBuilder.Library.Read.Models;
 using System.Text;
 
-namespace SqlScriptBuilder.Library.Read;
+namespace SqlScriptBuilder.Library.Read.Builders;
 
 internal class IsNullBuilder : SqlFunctionBuilder
 {
@@ -21,13 +22,20 @@ internal class IsNullBuilder : SqlFunctionBuilder
 
     public override ISqlScript Build()
     {
-        var checkExpression = GetArgument( "checkExpression" );
-        var replacementValue = GetArgument( "replacementValue");
-        var fieldAlias = GetFieldAlias();
+        //var checkExpression = GetArgument( "checkExpression" );
+        //var replacementValue = GetArgument( "replacementValue");
+        //var fieldAlias = GetFieldAlias();
 
-        var script = new StringBuilder()
-            .Append( $"isnull( {checkExpression}, {replacementValue} ) AS {fieldAlias}" );
+        //var script = new StringBuilder()
+        //    .Append( $"isnull( {checkExpression}, {replacementValue} ) AS {fieldAlias}" );
 
-        return new SqlReadScript( script );
+        //return new SqlReadScript( script );
+
+        return new IsNullFunction()
+        {
+            CheckExpression = GetArgument( "checkExpression" ),
+            ReplacementValue = GetArgument( "replacementValue" ),
+            Alias = GetFieldAlias()
+        };
     }
 }

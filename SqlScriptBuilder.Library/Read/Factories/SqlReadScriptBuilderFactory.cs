@@ -1,6 +1,7 @@
-﻿using SqlScriptBuilder.Library.Read.Interfaces;
+﻿using SqlScriptBuilder.Library.Read.Builders;
+using SqlScriptBuilder.Library.Read.Interfaces;
 
-namespace SqlScriptBuilder.Library.Read;
+namespace SqlScriptBuilder.Library.Read.Factories;
 
 internal class SqlReadScriptBuilderFactory : ISqlReadScriptBuilderFactory
 {

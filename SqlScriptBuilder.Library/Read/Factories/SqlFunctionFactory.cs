@@ -1,4 +1,6 @@
-﻿namespace SqlScriptBuilder.Library.Read
+﻿using SqlScriptBuilder.Library.Read.Builders;
+
+namespace SqlScriptBuilder.Library.Read.Factories
 {
     public class SqlFunctionFactory
     {

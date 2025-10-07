@@ -1,6 +1,7 @@
 ﻿using SqlScriptBuilder.Library.Interfaces;
+using SqlScriptBuilder.Library.Read.Models;
 
-namespace SqlScriptBuilder.Library.Read;
+namespace SqlScriptBuilder.Library.Read.Builders;
 
 internal class LikeConditionalOperatorBuilder : ConditionalOperatorBuilder
 {
@@ -17,6 +18,9 @@ internal class LikeConditionalOperatorBuilder : ConditionalOperatorBuilder
         var value = Value.ToString()
             .EscapeQuotation();
 
-        return new SqlReadScript( $"{( _denial ? "not " : "" )}{ConditionalOperator} '{value}'" );
+        return new LikeConditionalOperator( value )
+        {
+            Denial = _denial
+        };
     }
 }

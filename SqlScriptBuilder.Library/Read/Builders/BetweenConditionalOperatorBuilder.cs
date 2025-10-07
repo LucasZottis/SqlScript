@@ -1,6 +1,7 @@
 ﻿using SqlScriptBuilder.Library.Interfaces;
+using SqlScriptBuilder.Library.Read.Models;
 
-namespace SqlScriptBuilder.Library.Read;
+namespace SqlScriptBuilder.Library.Read.Builders;
 
 internal class BetweenConditionalOperatorBuilder : ConditionalOperatorBuilder
 {
@@ -14,6 +15,6 @@ internal class BetweenConditionalOperatorBuilder : ConditionalOperatorBuilder
 
     public override ISqlScript Build()
     {
-        return new SqlReadScript( $"{ConditionalOperator} {SqlValueFormatter.Format( Value )} AND {SqlValueFormatter.Format( _lastValue )}" );
+        return new BetweenConditionalOperator(Value, _lastValue);
     }
 }

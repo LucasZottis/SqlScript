@@ -1,4 +1,6 @@
-﻿namespace SqlScriptBuilder.Library.Read;
+﻿using SqlScriptBuilder.Library.Read.Models;
+
+namespace SqlScriptBuilder.Library.Read.Factories;
 
 internal static class JoinTypeFactory
 {

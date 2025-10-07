@@ -1,4 +1,4 @@
-﻿namespace SqlScriptBuilder.Library.Read;
+﻿namespace SqlScriptBuilder.Library.Read.Builders;
 
 internal class IsConditionalOperatorBuilder : ConditionalOperatorBuilder
 {

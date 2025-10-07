@@ -1,5 +1,7 @@
-﻿namespace SqlScriptBuilder.Library.Read.Interfaces;
+﻿using SqlScriptBuilder.Library.Interfaces;
 
-internal interface IFunctionBuilder
+namespace SqlScriptBuilder.Library.Read.Interfaces;
+
+internal interface IFunctionBuilder : ISqlScriptBuilder
 {
 }

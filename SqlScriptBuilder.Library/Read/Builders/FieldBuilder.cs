@@ -1,7 +1,7 @@
 ﻿using SqlScriptBuilder.Library.Interfaces;
 using SqlScriptBuilder.Library.Read.Models;
 
-namespace SqlScriptBuilder.Library.Read;
+namespace SqlScriptBuilder.Library.Read.Builders;
 
 internal class FieldBuilder : ISqlScriptBuilder
 {

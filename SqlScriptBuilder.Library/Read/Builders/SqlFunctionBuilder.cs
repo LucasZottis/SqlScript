@@ -1,8 +1,9 @@
 ﻿using SqlScriptBuilder.Library.Interfaces;
+using SqlScriptBuilder.Library.Read.Interfaces;
 
-namespace SqlScriptBuilder.Library.Read;
+namespace SqlScriptBuilder.Library.Read.Builders;
 
-public abstract class SqlFunctionBuilder : ISqlScriptBuilder
+public abstract class SqlFunctionBuilder : IFunctionBuilder
 {
     protected const string FIELD_ARGUMENT = "fieldAlias";
     protected string[] Arguments { get; private set; }

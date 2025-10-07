@@ -1,4 +1,4 @@
-﻿using SqlScriptBuilder.Library.Read;
+﻿using SqlScriptBuilder.Library.Read.Factories;
 using SqlScriptBuilder.Library.Read.Interfaces;
 
 namespace SqlScriptBuilder.Library;

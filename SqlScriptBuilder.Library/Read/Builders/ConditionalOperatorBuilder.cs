@@ -1,6 +1,7 @@
 ﻿using SqlScriptBuilder.Library.Interfaces;
+using SqlScriptBuilder.Library.Read.Models;
 
-namespace SqlScriptBuilder.Library.Read;
+namespace SqlScriptBuilder.Library.Read.Builders;
 
 public class ConditionalOperatorBuilder : ISqlScriptBuilder
 {
@@ -15,6 +16,6 @@ public class ConditionalOperatorBuilder : ISqlScriptBuilder
 
     public virtual ISqlScript Build()
     {
-        return new SqlReadScript( $"{ConditionalOperator} {SqlValueFormatter.Format( Value )}" );
+        return new ConditionalOperator(ConditionalOperator, Value );
     }
 }
